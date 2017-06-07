@@ -37,10 +37,11 @@ class DetailsViewPost: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
-        self.navigationController?.navigationBar.tintColor = UIColor.white
-        self.navigationController!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
-
+        // Configuramos el navigationBar
+        self.configureNavigationBar()
+        
+        self.tableView.backgroundColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
+        
         // Nos hacemos delegados de la Manager con su protocolo
         instance.delegate = self as ManagerProtocol
         
@@ -49,6 +50,15 @@ class DetailsViewPost: UIViewController {
         
         // Cargamos los comentarios del Post
         self.loadCommentPost()
+    }
+    
+    func configureNavigationBar() {
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        
+        // Eliminamos el boton Back
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     func loadCommentPost() {
@@ -150,6 +160,7 @@ extension DetailsViewPost: UITableViewDataSource, UITableViewDelegate {
         postComment = self.postComments[indexPath.row] // Obtenemos la fila
         
         cell.userLabel.text = postComment.autor
+        cell.userLabel.tintColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
         cell.commentLabel.text = postComment.comment
         
         return cell
@@ -163,8 +174,15 @@ extension DetailsViewPost: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
+    // Funcion para definir la altura de la celda
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100.0
+    }
+    
+    // Funcion para nombre de la seccion
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+
+        return "Comments"
     }
     
 }

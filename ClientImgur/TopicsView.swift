@@ -26,10 +26,8 @@ class TopicsView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
-        self.navigationController?.navigationBar.tintColor = UIColor.white
-        self.navigationController!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
-        
+        // Configuramos el navigationBar
+        self.configureNavigationBar()
         
         // Creamos nuestra barra de busqueda
         self.createSearchController()
@@ -38,6 +36,15 @@ class TopicsView: UIViewController {
         instance.delegate = self as ManagerProtocol
         
         
+    }
+    
+    func configureNavigationBar() {
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        
+        // Eliminamos el boton Back
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -170,7 +177,7 @@ extension TopicsView: UITableViewDataSource, UITableViewDelegate {
         cell.accessoryType = .disclosureIndicator
         
         // Asignamos el nombre del Topic al Label de la celda
-        cell.categoryNameLabel.text = topic.displayName
+        cell.categoryNameLabel.text = topic.displayName.capitalized
         
         return cell
         

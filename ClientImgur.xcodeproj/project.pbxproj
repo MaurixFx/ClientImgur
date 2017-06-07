@@ -449,6 +449,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 5355TA2ZTC;
 				INFOPLIST_FILE = ClientImgur/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mauriciofigueroa.ClientImgur;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -466,6 +467,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = 5355TA2ZTC;
 				INFOPLIST_FILE = ClientImgur/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mauriciofigueroa.ClientImgur;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -15,19 +15,31 @@ class NewPostImageView: UIViewController {
 
     
     @IBOutlet var imagePost: UIImageView!
-    @IBOutlet var titleTextfield: UITextField!
-    @IBOutlet var textViewDescription: UITextView!
+
+    // Declaramos un activityIndicator
+    var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
-        self.navigationController?.navigationBar.tintColor = UIColor.white
-        self.navigationController!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        
+        self.title = "Publicar imagen"
+        
+        // Configuramos el navigationBar
+        self.configureNavigationBar()
 
         // Llamamos la función para configurar la imagen
         self.configImage()
         
+    }
+    
+    func configureNavigationBar() {
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        
+        // Eliminamos el boton Back
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     func configImage() {
@@ -56,8 +68,14 @@ class NewPostImageView: UIViewController {
             return
         }
         
+        // Iniciamos el activityIndicator
+        self.startActivityIndicator()
+        
         // Llamamos la funcion para subir la Imagen
         Manager.sharedInstance.uploadImagen(image: self.imagePost.image!) {
+            
+            // Paramos el activityIndicator
+            self.stopActivityIndicator()
             
             let link = Manager.sharedInstance.linkUploadedImage
             
@@ -69,15 +87,6 @@ class NewPostImageView: UIViewController {
             
         }
         
-      
-        
-        
-      
-        
-        
-        
-        
-        
     }
     
     func showAlert(title: String, message: String) {
@@ -87,6 +96,31 @@ class NewPostImageView: UIViewController {
         self.present(alertController, animated: true, completion: nil)
     }
     
+    func startActivityIndicator() {
+        // ActivityIndicator
+        self.activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        // Lo centramos
+        self.activityIndicator.center = self.view.center
+        //Lo ocultamos cuando lo paremos
+        self.activityIndicator.hidesWhenStopped = true
+        // Le damos un estilo gris
+        self.activityIndicator.activityIndicatorViewStyle = .whiteLarge
+        // Lo agregamos a la vista
+        self.view.addSubview(self.activityIndicator)
+        //Activamos el activityIndicator
+        self.activityIndicator.startAnimating()
+        
+        
+        // No permitimos que se ejecute otra accion en pantalla
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        
+    }
+    
+    func stopActivityIndicator(){
+        self.activityIndicator.stopAnimating()
+        // Activamos los eventos en pantalla
+        UIApplication.shared.endIgnoringInteractionEvents()
+    }
 
     /*
     // MARK: - Navigation
@@ -132,7 +166,7 @@ extension NewPostImageView: UIImagePickerControllerDelegate, UINavigationControl
         alertController.addAction(cancelAction)
         
         // Implementamos la accion de tomar foto
-        let takePhotoAction = UIAlertAction(title: "Take Photo", style: .default) { (_) in
+        let takePhotoAction = UIAlertAction(title: "Tomar una Foto", style: .default) { (_) in
             // Llamamos al metodo que toma la foto
             self.takePhotoWithCamera()
         }

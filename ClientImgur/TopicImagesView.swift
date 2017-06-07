@@ -28,18 +28,22 @@ class TopicImagesView: UIViewController {
     // Creamos un array de los resultados de busqueda
     var searchResult = [TopicPosts]()
     
+    // Declaramos un refreshControll
+    var refreshControl = UIRefreshControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
-        self.navigationController?.navigationBar.tintColor = UIColor.white
-        self.navigationController!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        // Configuramos el navigationBar
+        self.configureNavigationBar()
 
         // Asignamos el nombre del topic al titulo principal
-        self.title = tag.name
+        self.title = tag.name.capitalized
         
         // Creamos nuestra barra de busqueda
         self.createSearchController()
+        
+        self.createRefreshController()
         
         // Nos hacemos delegados de la Manager con su protocolo
         Manager.sharedInstance.delegate = self as ManagerProtocol
@@ -47,6 +51,28 @@ class TopicImagesView: UIViewController {
         // Cargamos Los Posts del Tag
         loadTopicPosts()
         
+    }
+    
+    func createRefreshController() {
+        // Creamos un refreshControl
+        self.refreshControl = UIRefreshControl()
+        
+        // Asignamos un titulo al refresh
+        self.refreshControl.attributedTitle = NSAttributedString(string: "Tira para recargar mas imagenes")
+        //Agregamos la vista y el metodo cargar Usuarios
+        self.refreshControl.addTarget(self, action: #selector(TopicImagesView.loadTopicPosts), for: .valueChanged)
+        
+        // Agregamos el refreshControl a la tabla
+        self.tableView.refreshControl = self.refreshControl
+    }
+    
+    func configureNavigationBar() {
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+        
+        // Eliminamos el boton Back
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -83,7 +109,7 @@ class TopicImagesView: UIViewController {
     
     func loadTopicPosts() {
         // Asignamos el id del topic que elegimos en la pantalla anterior
-        let name = self.tag.name
+        let name = self.tag.name.capitalized
         
         // Cargamos los Post del Topic seleccionado en la pantalla anterior
       //  self.topicPost = Manager.sharedInstance.loadTopicsPost(nameTag: name)
@@ -91,6 +117,10 @@ class TopicImagesView: UIViewController {
         Manager.sharedInstance.loadTopicsPost(nameTag: name) { 
             // Asignamos el resultado de la peticion a nuestro array
             self.topicPost = Manager.sharedInstance.imagesTopic
+            
+            // Paramos el refreshControl
+            self.refreshControl.endRefreshing()
+            
             // Recargamos la tabla
             self.tableView.reloadData()
         }
@@ -211,7 +241,10 @@ extension TopicImagesView: UITableViewDataSource, UITableViewDelegate {
             post = self.topicPost[indexPath.row] // Obtenemos la fila
         }
         
-        // Llamamos la función para configurar la celda
+        // Asignamos el titulo
+        cell.titleLabel.text = post.title.capitalized
+        
+        // Llamamos la función para configurar la imagen y descripcion celda
         cell.configureCell(post)
 
         return cell

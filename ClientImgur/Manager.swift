@@ -30,8 +30,10 @@ class Manager: NSObject {
     // Declaramos un array de la clase Comments
     var comments : [Comments] = []
     
+    // Declaramos un objeto de la clase ImagePost
     var imagePost: ImagePost!
     
+    // Declaramos un objeto de la clase TopicPosts
     var topicPost: TopicPosts!
     
     weak var delegate: ManagerProtocol?
@@ -55,7 +57,6 @@ class Manager: NSObject {
                 let sucess = json["success"].int;
                 
                 if (sucess == 1){
-                   // let dataJSON =  json["data"]["tags"].dictionaryObject;
 
                     let dataJSON = json["data"];
                     
@@ -172,23 +173,16 @@ class Manager: NSObject {
                             
                             //Parse Array from Json Response
                             let subArrayPost = dataPost[t];
-                            //let description = subArrayPost["description"].string
-                            /*let start = link?.startIndex
-                             let end = link?.index((link?.endIndex)!, offsetBy: -3)
-                             let substring = link?[start!..<end!] // www.stackoverflow*/
-                            
                             let type = subArrayPost["type"].string
                             
                             // Si es una imagen la procesamos
-                            if type == "image/jpeg" {
+                            if type == "image/jpeg" || type == "image/gif"  {
                                 var descrip: String = ""
-                                let id =  subArrayPost["id"].string!
                                 let link =  subArrayPost["link"].string!
                                 let descripcion =  subArrayPost["description"].string
                                 
                                 print(link)
 
-                                
                                 // Si no hay descripción lo dejamos vacio
                                 if let descriptionPost =  descripcion {
                                     descrip = descriptionPost
@@ -225,61 +219,6 @@ class Manager: NSObject {
 
     }
     
-  /*  func loadTopicsPost(nameTag: String) -> [TopicPosts] {
-        
-        // Agregamos la id del topic a la URL
-        let url = "\(CbaseUrlGaleryTags)\(nameTag)/"
-
-        Alamofire.request(url, method: .get, parameters: nil, encoding: URLEncoding.default, headers: Cheaders).responseJSON { (response:DataResponse<Any>) in
-            
-            switch(response.result) {
-            case .success(let data):
-                let json = JSON(data);
-                let sucess = json["success"].int;
-                
-                // Si se tiene exito
-                if (sucess == 1){
-                    let dataJSON =  json["data"];
-                    
-                    //Limpiamos el Array
-                    self.imagesTopic.removeAll();
-                    
-                    
-                    for result in dataJSON["items"].arrayValue {
-                        let idAlbum = result["id"].string
-                        let title = result["title"].string
-                        let datetime = result["datetime"].number
-                        let views = result["views"].int
-                        let ups = result["ups"].int
-                        let downs = result["downs"].int
-                        
-                        // Instanciamos la clase Topics y le pasamos los parametros
-                        let myGalerryTag = TopicPosts(id: idAlbum!, title: title!, description: "", datetime: datetime!, views: views!, link: "", ups: ups!, downs: downs!)
-                        
-                        //Agregamos el topic a nuestro array
-                        self.imagesTopic.append(myGalerryTag)
-
-                    }
-
-                    
-                    // Ejecutamos la funcion del protocolo
-                    self.delegate?.loadPostTopic()
-                    
-                }else{
-                    print ("Error de acceso");
-                    
-                }
-                
-            case .failure(let error):
-                print("\(error.localizedDescription)")
-                break
-                
-            }
-          
-        }
-        
-        return  self.imagesTopic
-    }*/
     
     func loadPost(post: TopicPosts, completed: @escaping DownloadComplete) {
         
@@ -310,7 +249,7 @@ class Manager: NSObject {
                             let type = subArrayPost["type"].string
                             
                             // Si es una imagen la procesamos
-                            if type == "image/jpeg" {
+                            if type == "image/jpeg" || type == "image/gif"  {
                                 let link =  subArrayPost["link"].string!
                                 let descripcion =  subArrayPost["description"].string
       
